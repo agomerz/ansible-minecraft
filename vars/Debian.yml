@@ -1,4 +1,5 @@
 ---
 dependencies:
   - default-jdk
+  - openjdk-17-jdk
   - sudo
