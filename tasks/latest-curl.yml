@@ -5,3 +5,18 @@
 - name: find and set latest version
   set_fact:
     minecraft_version_latest: "{{ (version_manifest.stdout | from_json).latest.release }}"
+
+
+- name: get latest Minecraft version manifest
+  set_fact: 
+    latest_version_manifest_url: "{{ (version_manifest.stdout | from_json) | json_query(query_string) }}"
+  vars:
+    query_string: "versions[?id=='{{ minecraft_version_latest }}'].url "
+
+- name: get Minecraft server download url
+  command: "curl {{ latest_version_manifest_url }}"
+  register: latest_minecraft_manifest
+
+- name: set Minecraft server download url
+  set_fact:
+    minecraft_server_download_url: "{{ (latest_minecraft_manifest.stdout | from_json)['downloads']['server']['url'] }}"
